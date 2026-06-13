@@ -105,4 +105,4 @@ O controle é feito via aplicativo Bluetooth no celular, que envia caracteres se
 
 ---
 
-> CIn-UFPE · Introdução ao Hardware · 2025.1
+> CIn-UFPE · Introdução á Computação · 2026.1
