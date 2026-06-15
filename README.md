@@ -1,6 +1,6 @@
 # 🚗💥 Cará-Móvel
 
-> Carrinho com torreta Nerf controlado via Bluetooth — Projeto Final de Introdução ao Hardware  
+> Carrinho com torreta Nerf controlado via Bluetooth — Projeto Final de Introdução à computação  
 > **Grupo Cin-Cará | CIn-UFPE | 2026.1**
 
 ---
