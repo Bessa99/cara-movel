@@ -2,6 +2,13 @@
 #define CUSTOM_SETTINGS
 #define INCLUDE_GAMEPAD_MODULE
 #include <Dabble.h>
+#include <Servo.h>
+
+//definindo o servo
+Servo servo;
+
+//pino do servo 
+int pServo = 11;
 
 //definindo os pinos
 const int P1 = 4;
@@ -17,7 +24,7 @@ const int A01 = 10;
 const int potencia_setinhas = 255;
 
 //definindo a potência das setinhas (Curva)
-const int potencia_setinhas_curva = 200;
+const int potencia_setinhas_curva = 255;
 
 void setup(){
   //iniciando
@@ -31,6 +38,25 @@ void setup(){
   pinMode(A00, OUTPUT);
   pinMode(A01, OUTPUT);
 }
+
+
+void ativar_servo(int pino){
+  if(servo.attached()){
+    servo.detach();
+  }
+  servo.attach(pino);
+  for(int n = 0; n < 90; n++){
+    servo.write(n);
+    delay(2);
+  }
+  for(int n = 90; n > 0; n--){
+    servo.write(n);
+    delay(2);
+  }
+  servo.detach();
+}
+
+
 
 void loop(){
   Dabble.processInput(); //atualiza os dados recebidos
@@ -69,6 +95,11 @@ void loop(){
     analogWrite(A01, potencia_setinhas_curva);
   }
 
+  //ativar servo
+  else if(GamePad.isTrianglePressed()){
+    ativar_servo(pServo);
+  }
+
   //Esquerda
   else if (GamePad.isLeftPressed()){
     digitalWrite(P1, LOW);
@@ -91,120 +122,6 @@ void loop(){
     analogWrite(A01, 0);
   }
 
-  //------ JOYSTICK ------//
-
-  //obtendo os dados do eixo x e y
-  float x = GamePad.getXaxisData();
-  float y = GamePad.getYaxisData();
-
-  //mapeando os dados de y para PWM
-  int velocidade = map(abs(y), 0, 7, 0, 255);
-
-  //limite de velocidade
-  if (velocidade > 255) {velocidade = 255;}
-
-  //Parar
-  if (abs(x) < 1.0 && abs(y) < 1.0){
-    digitalWrite(P1, LOW);  
-    digitalWrite(P2, LOW);
-    digitalWrite(P3, LOW);  
-    digitalWrite(P4, LOW);
-   
-    analogWrite(A00, 0);      
-    analogWrite(A01, 0);
-  }
-
-  //Frente
-  else if (y > 1.0 && abs(x) <= 3.0){
-    digitalWrite(P1, HIGH);
-    digitalWrite(P2, LOW);
-    digitalWrite(P3, HIGH);
-    digitalWrite(P4, LOW);
-
-    analogWrite(A00, velocidade);
-    analogWrite(A01, velocidade);
-  }
-
-  //Trás
-  else if ( y < -1.0 && abs(x) <= 3.0){
-    digitalWrite(P1, LOW);
-    digitalWrite(P2, HIGH);
-    digitalWrite(P3, LOW);
-    digitalWrite(P4, HIGH);
-
-    analogWrite(A00, velocidade);
-    analogWrite(A01, velocidade);
-  }
-
-  //Frente e Direita
-    else if (y > 3.0 && x > 3.0){
-    digitalWrite(P1, HIGH);
-    digitalWrite(P2, LOW);
-    digitalWrite(P3, HIGH);
-    digitalWrite(P4, LOW);
-
-    analogWrite(A00, velocidade);
-    analogWrite(A01, velocidade/1.5);
-  }
-
-  //Frente e Esquerda
-    else if (y > 3.0 && x < -3.0){
-    digitalWrite(P1, HIGH);
-    digitalWrite(P2, LOW);
-    digitalWrite(P3, HIGH);
-    digitalWrite(P4, LOW);
-
-    analogWrite(A00, velocidade/1.5);
-    analogWrite(A01, velocidade);
-  }
-
-  //Trás e Direita
-    else if (y < -3.0 && x > 3.0){
-    digitalWrite(P1, LOW);
-    digitalWrite(P2, HIGH);
-    digitalWrite(P3, LOW);
-    digitalWrite(P4, HIGH);
-
-    analogWrite(A00, velocidade);
-    analogWrite(A01, velocidade/1.5);
-  }
-
-  //Trás e Esquerda
-    else if (y < -3.0 && x < -3.0){
-    digitalWrite(P1, LOW);
-    digitalWrite(P2, HIGH);
-    digitalWrite(P3, LOW);
-    digitalWrite(P4, HIGH);
-
-    analogWrite(A00, velocidade/1.5);
-    analogWrite(A01, velocidade);
-  }
-
-  //Direita
-  else if (x > 3){
-    int velocidade_curva = map(abs(x), 0, 7, 0, 255);
-    digitalWrite(P1, HIGH);
-    digitalWrite(P2, LOW);
-    digitalWrite(P3, LOW);
-    digitalWrite(P4, HIGH);
-
-    analogWrite(A00, velocidade_curva);
-    analogWrite(A01, velocidade_curva);
-  }
-
-  //Esquerda
-  else if (x < -3){
-    int velocidade_curva = map(abs(x), 0, 7, 0, 255);
-    digitalWrite(P1, LOW);
-    digitalWrite(P2, HIGH);
-    digitalWrite(P3, HIGH);
-    digitalWrite(P4, LOW);
-
-    analogWrite(A00, velocidade_curva);
-    analogWrite(A01, velocidade_curva);
-  }
 
   delay(20);
 }
-
-
