@@ -4,11 +4,21 @@
 #include <Dabble.h>
 #include <Servo.h>
 
-//definindo o servo
+//definindo o servo do tiro
 Servo servo;
 
 //pino do servo 
-int pServo = 11;
+const int pServo = 11;
+
+//definindo servo do ajuste
+Servo servoAjuste;
+
+//pino do servo de ajuste
+const int pinoServoAjuste = 8;
+
+//angulo do servo de ajuste
+int angulo = 90;
+
 
 //definindo os pinos
 const int P1 = 4;
@@ -43,26 +53,29 @@ void setup(){
   pinMode(A00, OUTPUT);
   pinMode(A01, OUTPUT);
   pinMode(pino_motores, OUTPUT);
+  pinMode(pinoServoAjuste, OUTPUT);
+
+  //anexando pinos dos servos
+  servo.attach(pServo);
+  servoAjuste.attach(pinoServoAjuste);
+
+  //organizando os angulos inicias dos servos
+  servo.write(0);
+  servoAjuste.write(angulo);
 }
 
 
-void ativar_servo(int pino, bool ligado){
+void ativar_servo(bool ligado){
   if(ligado){
-    if(servo.attached()){
-      servo.detach();
-    }
-    servo.attach(pino);
     for(int n = 0; n < 90; n++){
       servo.write(n);
-      delay(2);
+      delay(10);
     }
     for(int n = 90; n > 0; n--){
       servo.write(n);
-      delay(2);
+      delay(10);
     }
-    servo.detach();
   } 
-  
   else{
     Serial.println("Ligue os motores antes de ativar o servo");
   }
@@ -84,7 +97,6 @@ bool desativar_motores(int pino){
   }
   return false;
 }
-
 
 
 void loop(){
@@ -152,10 +164,10 @@ void loop(){
 
   //ativar servo
   if(GamePad.isTrianglePressed()){
-    ativar_servo(pServo, ligado);
+    ativar_servo(ligado);
   }
 
-  //ativar || desativar motores
+  //ativar ou desativar motores
   else if(atualEstadoQuadrado && !ultimoEstadoQuadrado){
     if(!ligado){
       ligado = ativar_motores(pino_motores);
@@ -165,6 +177,25 @@ void loop(){
   }
   ultimoEstadoQuadrado = atualEstadoQuadrado;
 
+  //mover torreta para cima
+  if(GamePad.isCrossPressed()){
+    angulo++;
+  }
+
+  //mover torreta para baixo
+  else if(GamePad.isCirclePressed()){
+    angulo--;
+  }
+
+  //limita o angulo entre 90 e 110
+  if(angulo > 110){
+    angulo = 110;
+  }
+  else if(angulo < 90){
+    angulo = 90;
+  }
+
+  servoAjuste.write(angulo);
 
   delay(20);
 }
