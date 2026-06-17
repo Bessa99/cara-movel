@@ -29,6 +29,7 @@ const int P4 = 7;
 //definindo o pino do motor de corrente contínua e variável ON/OFF
 const int pino_motores = 12;
 bool ligado = false;
+
 //variavel para o botão quadrado
 bool ultimoEstadoQuadrado = false;
 

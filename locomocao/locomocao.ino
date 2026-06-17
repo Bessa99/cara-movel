@@ -29,6 +29,7 @@ const int P4 = 7;
 //definindo o pino do motor de corrente contínua e variável ON/OFF
 const int pino_motores = 12;
 bool ligado = false;
+
 //variavel para o botão quadrado
 bool ultimoEstadoQuadrado = false;
 
@@ -78,18 +79,12 @@ void ativar_servo(bool ligado){
 }
 
 bool ativar_motores(int pino){
-  if (!ligado){
-    ligado = true;
-    digitalWrite(pino, 1);
-  }
+  digitalWrite(pino, 1);
   return true;
 }
 
 bool desativar_motores(int pino){
-  if(ligado){
-    ligado = false;
-    digitalWrite(pino, 0);
-  }
+  digitalWrite(pino, 0);
   return false;
 }
 
@@ -162,11 +157,12 @@ void loop(){
     ativar_servo(ligado);
   }
 
-  //ativar ou desativar motores
+  //ativar ou desativar motores CC
   else if(atualEstadoQuadrado && !ultimoEstadoQuadrado){
     if(!ligado){
       ligado = ativar_motores(pino_motores);
-    } else if(ligado){
+    } 
+    else if(ligado){
       ligado = desativar_motores(pino_motores);
     }
   }
@@ -183,12 +179,7 @@ void loop(){
   }
 
   //limita o angulo entre 90 e 110
-  if(angulo > 110){
-    angulo = 110;
-  }
-  else if(angulo < 90){
-    angulo = 90;
-  }
+  angulo = constrain(angulo, 90; 110);
 
   servoAjuste.write(angulo);
 
