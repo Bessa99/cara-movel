@@ -53,6 +53,9 @@ void setup(){
   pinMode(P4, OUTPUT);
   pinMode(A00, OUTPUT);
   pinMode(A01, OUTPUT);
+
+  digitalWrite(pino_motores, HIGH);
+  
   pinMode(pino_motores, OUTPUT);
   pinMode(pinoServoAjuste, OUTPUT);
 
@@ -79,12 +82,12 @@ void ativar_servo(bool ligado){
 }
 
 bool ativar_motores(int pino){
-  digitalWrite(pino, 1);
+  digitalWrite(pino, 0);
   return true;
 }
 
 bool desativar_motores(int pino){
-  digitalWrite(pino, 0);
+  digitalWrite(pino, 1);
   return false;
 }
 
@@ -182,7 +185,6 @@ void loop(){
   angulo = constrain(angulo, 62, 110);
 
   servoAjuste.write(angulo);
-  
-  //delay
+
   delay(20);
 }
