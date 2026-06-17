@@ -17,7 +17,7 @@ Servo servoAjuste;
 const int pinoServoAjuste = 8;
 
 //angulo do servo de ajuste
-int angulo = 90;
+int angulo = 62;
 
 
 //definindo os pinos
@@ -178,10 +178,11 @@ void loop(){
     angulo--;
   }
 
-  //limita o angulo entre 90 e 110
-  angulo = constrain(angulo, 90; 110);
+  //limita o angulo entre 62 e 110
+  angulo = constrain(angulo, 62, 110);
 
   servoAjuste.write(angulo);
-
+  
+  //delay
   delay(20);
 }
